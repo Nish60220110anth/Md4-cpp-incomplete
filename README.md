@@ -1,4 +1,4 @@
 # Md4
 Md4 in c++
 
-Not working completly
+Can generate output with very less collision percentage ( !in progress )
