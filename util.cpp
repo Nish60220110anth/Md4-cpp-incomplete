@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <cassert>
+#include <iomanip>
 
 std::vector<bool> vec_from_bitset8s(std::bitset<8UL> bt) {
     std::vector<bool> r;
@@ -134,6 +135,8 @@ std::bitset<32UL> add(std::bitset<32UL> bt1, std::bitset<32UL> bt2) {
 }
 
 std::bitset<32UL> add(std::bitset<32UL> bt, int32_t a) {
+    // std::cout << std::hex << "original" << a << "\n";
     std::bitset<32UL> bt1 = bitset_from_int32_t(a);
+    // std::cout << std::hex << int32_t_from_bitset(reverse_bitset_32s(bt1)) << "\n";
     return add(bt, bt1);
 }

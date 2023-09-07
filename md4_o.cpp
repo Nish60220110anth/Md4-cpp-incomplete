@@ -18,7 +18,7 @@
 void redirectIO() {
 
 #ifndef TEST_IMODE
-    freopen64("./input.in", "w+", stdin);
+    freopen64("./input.in", "r", stdin);
 #else 
     freopen64("./test.out", "r", stdin);
 #endif
@@ -75,7 +75,7 @@ namespace algorithm {
 
     std::vector<bool> apply_padding(std::vector<bool>& vec) {
         size_t sz = vec.size();
-        size_t toadd = calculate_to_add(sz);
+        size_t toadd = calculate_to_add(sz % 512);
 
         vec.push_back(true), toadd -= 1; // 1 added
 
@@ -294,12 +294,20 @@ void __test() {
 }
 
 void __main() {
-    std::cout << algorithm::md4("nishanth") << "\n";
-    std::vector<bool> v1, v2;
-    v1 = algorithm::v1;
-    std::cout << algorithm::md4("nishant") << "\n";
-    v2 = algorithm::v1;
-    std::cout << algorithm::md4("arun") << "\n";
+    // std::cout << algorithm::md4("nishanth") << "\n";
+    // std::vector<bool> v1, v2;
+    // v1 = algorithm::v1;
+    // std::cout << algorithm::md4("nishant") << "\n";
+    // v2 = algorithm::v1;
+    // std::cout << algorithm::md4("arun") << "\n";
+
+    while (!std::cin.eof()) {
+        std::string s;
+        std::cin >> s;
+        std::cout << "------BEGIN-DIGEST------\n";
+        std::cout << algorithm::md4(s) << "\n-------END-DIGEST-------\n";
+
+    }
 }
 
 int main(int argc, char* argv[]) {
