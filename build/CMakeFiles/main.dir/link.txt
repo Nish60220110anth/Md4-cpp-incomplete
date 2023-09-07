@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/main.dir/md4_o.cpp.o CMakeFiles/main.dir/rand.cpp.o CMakeFiles/main.dir/stream.cpp.o CMakeFiles/main.dir/util.cpp.o -o main 
