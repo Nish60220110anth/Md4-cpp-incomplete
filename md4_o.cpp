@@ -12,9 +12,6 @@
 #include "stream.hpp"
 #include "util.hpp"
 
-// #define TEST_IMODE
-// #define DEV_MODE
-
 void redirectIO() {
 
 #ifndef TEST_IMODE
@@ -53,7 +50,7 @@ namespace algorithm {
 
         for (signed char c : msg) {
             std::vector<bool> i = vec_from_bitset8s(bitset8s_from_uchar(static_cast<unsigned char>(c)));
-            r.insert(std::end(r), std::begin(i), std::end(i));
+            r.insert(std::end(r), std::rbegin(i), std::rend(i));
         }
 
         return r;
@@ -73,14 +70,14 @@ namespace algorithm {
         }
     }
 
-    std::vector<bool> apply_padding(std::vector<bool>& vec) {
+    void apply_padding(std::vector<bool>& vec) {
         size_t sz = vec.size();
         size_t toadd = calculate_to_add(sz % 512);
 
-        vec.push_back(true), toadd -= 1; // 1 added
+        assert(toadd != 0); // toadd will never be equal to zero 
+        vec.push_back(true), toadd -= 1; // value 1 added
 
         for (int i = 0;i < toadd;i++) vec.push_back(false);
-        return vec;
     }
 
     /**
@@ -136,18 +133,10 @@ namespace algorithm {
             num.push_back(t);
         }
 
-        // for (int i = 0;i < num.size();i++) {
-        //     std::cout << num[i] << " ";
-        // }
-
-        // std::cout << "\n";
-
-        std::vector<int32_t> iter;
+        std::vector<int32_t> iter(16, 0);
 
         for (int i = 0;i < num.size() / 16;i++) {
             iter.clear();// stores all 16 int32_t numbers for one iteration
-            iter.resize(16);
-
             for (int j = 0;j < 15;j++) {
                 iter[j] = num[16 * i + j];
             }
@@ -253,17 +242,12 @@ namespace algorithm {
         return res;
     }
 
-    std::vector<bool> v1;
-
     std::string md4(std::string msg) {
         initialize_buffers();
 
         std::vector<bool> vec = vec_from_message(msg);
-        // std::cout << vec.size() << "\n";
         apply_padding(vec);
-        // std::cout << vec.size() << "\n";
         append_size(vec, msg.length());
-        v1 = std::vector<bool>(vec.begin(), vec.end());
         populate_buffers(vec);
         return generate_digest();
     }
@@ -276,36 +260,12 @@ void init() {
     setIO();
 }
 
-void __test() {
-    std::bitset<32UL> bt(9), bt2;
-    std::cout << bt << "\n";
-    bt2 = left_rotate(bt, 0);
-    std::cout << bt2 << "\n";
-    std::cout << add(bt, bt2);
-
-    // std::bitset<8UL> rbt = reverse_bitset_8s(bt);
-    // std::cout << rbt << "\n";
-
-    // algorithm::md4("12");
-    // algorithm::print_buffers();
-    // algorithm::initialize_buffers();
-    // std::cout << string_from_bitset(algorithm::A) << "\n" << string_from_bitset(algorithm::B) <<"\n";
-    // std::cout << algorithm::generate_digest();
-}
-
 void __main() {
-    // std::cout << algorithm::md4("nishanth") << "\n";
-    // std::vector<bool> v1, v2;
-    // v1 = algorithm::v1;
-    // std::cout << algorithm::md4("nishant") << "\n";
-    // v2 = algorithm::v1;
-    // std::cout << algorithm::md4("arun") << "\n";
-
     while (!std::cin.eof()) {
         std::string s;
         std::cin >> s;
-        std::cout << "------BEGIN-DIGEST------\n";
-        std::cout << algorithm::md4(s) << "\n-------END-DIGEST-------\n";
+        std::cout << "---------BEGIN-DIGEST---------\n";
+        std::cout << algorithm::md4(s) << "\n----------END-DIGEST----------\n";
 
     }
 }

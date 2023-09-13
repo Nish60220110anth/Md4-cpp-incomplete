@@ -11,10 +11,12 @@ std::vector<bool> vec_from_bitset8s(std::bitset<8UL> bt) {
         r.push_back(bt.test(s));
     }
 
+    std::reverse(r.begin(), r.end());
     return r;
 }
 
 std::bitset<8UL> bitset8s_from_vec(std::vector<bool> vec) {
+    std::reverse(vec.begin(), vec.end()); // change direction of vec
     std::bitset<8UL> bt;
     bt.reset();
 
@@ -48,6 +50,7 @@ std::vector<bool> vec_from_size_t(size_t t) {
         vec.push_back(bt.test(i));
     }
 
+    std::reverse(vec.begin(), vec.end());
     return vec;
 }
 
@@ -60,6 +63,11 @@ std::string string_from_bitset(std::bitset<32UL> bt) {
         a4 = 2 * a4 + a2;
         a4 = 2 * a4 + a1;
 
+        // a1 = 2 * a1 + a2;
+        // a1 = 2 * a1 + a3;
+        // a1 = 2 * a1 + a4;
+
+        // a4 = a1;
 
         if (a4 <= 9) a4 = 48 + a4;
         else a4 = 87 + a4;
@@ -84,11 +92,7 @@ int32_t H(int32_t x, int32_t y, int32_t z) {
 }
 
 int32_t int32_t_from_bitset(std::bitset<32UL> bt) {
-    int32_t r = 0;
-    for (int i = 0;i < 32;i++) {
-        r = 2 * r + bt.test(i);
-    }
-
+    int32_t r = bt.to_ulong();
     return r;
 }
 
@@ -105,16 +109,17 @@ std::bitset<32UL> bitset_from_int32_t(int32_t a) {
     return f;
 }
 
-std::bitset<32UL> left_rotate(std::bitset<32UL> num, int pl) {
+std::bitset<32UL> right_rotate(std::bitset<32UL> num, int pl) {
+    // right rotate in this direction of bitset is left rotate in another 
     if (pl == 0) return num;
     else if (pl > 0) return (num << pl) | (num >> (32 - pl));
-    else return right_rotate(num, -pl);
+    else return left_rotate(num, -pl);
 }
 
-std::bitset<32UL> right_rotate(std::bitset<32UL> num, int pl) {
+std::bitset<32UL> left_rotate(std::bitset<32UL> num, int pl) {
     if (pl == 0) return num;
     else if (pl > 0) return (num >> pl) | (num << (32 - pl));
-    else return left_rotate(num, -pl);
+    else return right_rotate(num, -pl);
 }
 
 std::bitset<32UL> reverse_bitset_32s(std::bitset<32UL> bt) {
@@ -130,8 +135,8 @@ std::bitset<32UL> reverse_bitset_32s(std::bitset<32UL> bt) {
 }
 
 std::bitset<32UL> add(std::bitset<32UL> bt1, std::bitset<32UL> bt2) {
-    int32_t a1 = int32_t_from_bitset(reverse_bitset_32s(bt1)), a2 = int32_t_from_bitset(reverse_bitset_32s(bt2));
-    return reverse_bitset_32s(bitset_from_int32_t(a1 + a2));
+    int32_t a1 = bt1.to_ulong(), a2 = bt2.to_ulong();
+    return bitset_from_int32_t(a1 + a2);
 }
 
 std::bitset<32UL> add(std::bitset<32UL> bt, int32_t a) {
